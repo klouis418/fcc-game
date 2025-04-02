@@ -16,7 +16,6 @@ sf::Vector2f vTileSize = {64, 32};
 sf::Vector2f vWorldSize = {29, 29};
 sf::Vector2f vOrigin = {14.5, 1};
 
-std::unordered_map<std::pair<float, float>, int, FloatPairHash> pWorld;
 std::unordered_map<std::pair<float, float>, sf::Vector2f, FloatPairHash> tilePositions;
 
 
