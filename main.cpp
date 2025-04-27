@@ -13,9 +13,10 @@ struct FloatPairHash {
 };
 
 sf::Vector2f vTileSize = {64, 32};
-sf::Vector2f vWorldSize = {29, 29};
+sf::Vector2f vWorldSize = {40, 40};
 sf::Vector2f vOrigin = {14.5, 1};
 
+std::unordered_map<std::pair<float, float>, int, FloatPairHash> pWorld;
 std::unordered_map<std::pair<float, float>, sf::Vector2f, FloatPairHash> tilePositions;
 
 
@@ -29,21 +30,25 @@ sf::Vector2f ToScreen(float x, float y) {
 
 sf::Texture tileTexture; 
 sf::Texture treeTexture;
-sf::Texture buildingTexture;
+sf::Texture jeffersonTexture;
+sf::Texture linganoreTexture;
 
 bool loadTextures() {
     bool tileLoad = tileTexture.loadFromFile("assets/tile.png"); 
     bool treeLoad = treeTexture.loadFromFile("assets/tree.png");
-    bool buildingLoad = buildingTexture.loadFromFile("assets/building.png");
+    bool jeffersonLoad = jeffersonTexture.loadFromFile("assets/jefferson.png");
+    bool linganoreLoad = linganoreTexture.loadFromFile("assets/linganore.png");
     return tileLoad && treeLoad;
 }
 
 std::vector<sf::Sprite> tiles;
 std::vector<sf::Sprite> trees;
-std::vector<sf::Sprite> buildings;
+std::vector<sf::Sprite> jeffersons;
+std::vector<sf::Sprite> linganores;
 
-std::vector<std::pair<int, int>> treePositions = { {0, 0}, {1,1}, {10, 12}, {10, 13}, {28,28} };
-std::vector<std::pair<int, int>> buildingPositions = { {11, 12}, {12, 11}, {13, 11}, {28, 0}};
+std::vector<std::pair<int, int>> treePositions = { {6, 7}, {1,1}, {10, 12}, {10, 13}, {28,28} };
+std::vector<std::pair<int, int>> jeffersonPositions = { {15, 16}};
+std::vector<std::pair<int, int>> linganorePositions = { {23, 16}};
 
 int main() {
     auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "FCC Game!");
@@ -76,18 +81,33 @@ int main() {
                 }
             }
 
-            for (auto& pos : buildingPositions) {
+            for (auto& pos : jeffersonPositions) {
                 float x = static_cast<float>(pos.first);
                 float y = static_cast<float>(pos.second);
 
              if (tilePositions.find({x, y}) != tilePositions.end()) {
-                    sf::Sprite building(buildingTexture);
+                    sf::Sprite jefferson(jeffersonTexture);
                     sf::Vector2f basePos = tilePositions[{x, y}];
                     sf::Vector2f adjusted_position(
                     basePos.x,
-                    basePos.y - (buildingTexture.getSize().y - vTileSize.y));
-                    building.setPosition(adjusted_position);
-                    buildings.push_back(building);
+                    basePos.y - (jeffersonTexture.getSize().y - vTileSize.y));
+                    jefferson.setPosition(adjusted_position);
+                    jeffersons.push_back(jefferson);
+                }
+            }
+
+            for (auto& pos : linganorePositions) {
+                float x = static_cast<float>(pos.first);
+                float y = static_cast<float>(pos.second);
+
+             if (tilePositions.find({x, y}) != tilePositions.end()) {
+                    sf::Sprite linganore(linganoreTexture);
+                    sf::Vector2f basePos = tilePositions[{x, y}];
+                    sf::Vector2f adjusted_position(
+                    basePos.x,
+                    basePos.y - (linganoreTexture.getSize().y - vTileSize.y));
+                    linganore.setPosition(adjusted_position);
+                    linganores.push_back(linganore);
                 }
             }
         }
@@ -111,10 +131,14 @@ int main() {
             window.draw(tree);
         }
 
-        for (auto& building : buildings) {
-            window.draw(building);
+        for (auto& jefferson : jeffersons) {
+            window.draw(jefferson);
         }
 
+        for (auto& linganore : linganores) {
+            window.draw(linganore);
+        }
+        
         sf::Font font("assets/Arial.ttf");
         if (!font.openFromFile("assets/Arial.ttf")) {
             std::cerr << "Failed to load font!" << std::endl;
@@ -141,5 +165,4 @@ int main() {
     }
     return 0;
 }
-
 
